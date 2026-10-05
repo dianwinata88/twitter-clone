@@ -10,3 +10,5 @@
 *.apk
 *.aab
 **/build/
+**/schemas/
+bin/
