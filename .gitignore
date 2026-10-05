@@ -11,3 +11,4 @@
 *.aab
 **/build/
 **/schemas/
+bin/
