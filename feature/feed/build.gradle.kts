@@ -22,11 +22,16 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.paging.compose)
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.core)
     ksp(libs.hilt.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
