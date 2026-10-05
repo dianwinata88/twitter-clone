@@ -8,8 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +24,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -30,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +50,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.twitterclone.core.ui.component.TweetCard
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +58,18 @@ fun FeedScreen(
     onTweetClick: (String) -> Unit,
     onProfileClick: (String) -> Unit,
     onComposeClick: () -> Unit,
+    onMyProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FeedViewModel = hiltViewModel(),
 ) {
     val tweets = viewModel.tweets.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val comingSoon: (String) -> Unit = { label ->
+        scope.launch { snackbarHostState.showSnackbar("$label coming soon") }
+    }
 
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
@@ -87,6 +103,40 @@ fun FeedScreen(
                 Icon(Icons.Filled.Edit, contentDescription = "Compose tweet")
             }
         },
+        bottomBar = {
+            NavigationBar {
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                    icon = { Icon(Icons.Outlined.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { comingSoon("Search") },
+                    icon = { Icon(Icons.Outlined.Search, contentDescription = "Search") },
+                    label = { Text("Search") },
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { comingSoon("Notifications") },
+                    icon = { Icon(Icons.Outlined.Notifications, contentDescription = "Notifications") },
+                    label = { Text("Alerts") },
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { comingSoon("Messages") },
+                    icon = { Icon(Icons.Outlined.MailOutline, contentDescription = "Messages") },
+                    label = { Text("Messages") },
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onMyProfileClick,
+                    icon = { Icon(Icons.Outlined.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") },
+                )
+            }
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         val isRefreshing =
@@ -113,7 +163,7 @@ fun FeedScreen(
                         modifier = Modifier.fillMaxSize(),
                     )
                 FeedContentState.Content ->
-                    LazyColumn(Modifier.fillMaxSize()) {
+                    LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
                         items(
                             count = tweets.itemCount,
                             key = tweets.itemKey { it.id },

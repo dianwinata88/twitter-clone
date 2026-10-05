@@ -16,6 +16,7 @@ fun NavGraphBuilder.feedGraph(navController: NavController) {
             onTweetClick = { tweetId -> navController.navigate(Routes.tweetDetail(tweetId)) },
             onProfileClick = { userId -> navController.navigate(Routes.profile(userId)) },
             onComposeClick = { navController.navigate(Routes.COMPOSE_TWEET) },
+            onMyProfileClick = { navController.navigate(Routes.PROFILE_ME) },
         )
     }
     composable(
