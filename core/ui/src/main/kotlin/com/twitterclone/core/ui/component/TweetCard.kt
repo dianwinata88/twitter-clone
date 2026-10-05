@@ -19,6 +19,8 @@ import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +43,9 @@ import com.twitterclone.core.ui.util.relativeTime
 /**
  * Shared timeline card. This is the contract feature agents should reuse for
  * tweet rendering; keep the signature stable.
+ *
+ * Expressive M3 direction: each tweet is a rounded elevated card meant to sit
+ * on a tinted (surfaceContainerLow) feed background with a gap between cards.
  */
 @Composable
 fun TweetCard(
@@ -51,68 +55,82 @@ fun TweetCard(
     onProfileClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .clickable(onClick = onTweetClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors =
+            CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            ),
+        elevation =
+            CardDefaults.elevatedCardElevation(
+                defaultElevation = 1.dp,
+                pressedElevation = 3.dp,
+            ),
     ) {
-        AsyncImage(
-            model = tweet.author.avatarUrl,
-            contentDescription = "${tweet.author.displayName} avatar",
-            contentScale = ContentScale.Crop,
+        Row(
             modifier =
                 Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .clickable { onProfileClick(tweet.author.id) },
-        )
-        Spacer(Modifier.width(12.dp))
-        Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = tweet.author.displayName,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.clickable { onProfileClick(tweet.author.id) },
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    text = "@${tweet.author.username} · ${tweet.createdAt.relativeTime()}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text = tweet.text,
-                style = MaterialTheme.typography.bodyMedium,
+                    .fillMaxWidth()
+                    .clickable(onClick = onTweetClick)
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+        ) {
+            AsyncImage(
+                model = tweet.author.avatarUrl,
+                contentDescription = "${tweet.author.displayName} avatar",
+                contentScale = ContentScale.Crop,
+                modifier =
+                    Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .clickable { onProfileClick(tweet.author.id) },
             )
-            if (tweet.syncState == SyncState.PENDING) {
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = tweet.author.displayName,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.clickable { onProfileClick(tweet.author.id) },
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "@${tweet.author.username} · ${tweet.createdAt.relativeTime()}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = "Sending…",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = tweet.text,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
-            } else if (tweet.syncState == SyncState.FAILED) {
-                Text(
-                    text = "Failed to send",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.error,
-                )
+                if (tweet.syncState == SyncState.PENDING) {
+                    Text(
+                        text = "Sending…",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else if (tweet.syncState == SyncState.FAILED) {
+                    Text(
+                        text = "Failed to send",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+                val images = tweet.media.filter { it.type == MediaType.IMAGE }
+                if (images.isNotEmpty()) {
+                    Spacer(Modifier.height(10.dp))
+                    MediaGrid(images)
+                }
+                Spacer(Modifier.height(6.dp))
+                TweetActionBar(tweet = tweet, onLikeClick = onLikeClick)
             }
-            val images = tweet.media.filter { it.type == MediaType.IMAGE }
-            if (images.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                MediaGrid(images)
-            }
-            Spacer(Modifier.height(4.dp))
-            TweetActionBar(tweet = tweet, onLikeClick = onLikeClick)
         }
     }
 }
@@ -122,7 +140,7 @@ private fun MediaGrid(
     images: List<Media>,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(16.dp)
     when (images.size) {
         1 ->
             AsyncImage(
@@ -143,12 +161,12 @@ private fun MediaGrid(
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .clip(shape),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 cells.chunked(2).forEach { rowItems ->
                     Row(
                         modifier = Modifier.weight(1f),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         rowItems.forEach { media ->
                             AsyncImage(
@@ -159,7 +177,7 @@ private fun MediaGrid(
                                     Modifier
                                         .weight(1f)
                                         .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(4.dp)),
+                                        .clip(RoundedCornerShape(8.dp)),
                             )
                         }
                         if (rowItems.size == 1) Spacer(Modifier.weight(1f))
@@ -176,13 +194,21 @@ private fun TweetActionBar(
     onLikeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val actionTint = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ActionItem(
-            icon = { Icon(Icons.Outlined.ChatBubbleOutline, contentDescription = "Replies", modifier = Modifier.size(16.dp)) },
+            icon = {
+                Icon(
+                    Icons.Outlined.ChatBubbleOutline,
+                    contentDescription = "Replies",
+                    modifier = Modifier.size(18.dp),
+                    tint = actionTint,
+                )
+            },
             count = tweet.replyCount,
         )
         ActionItem(
@@ -190,25 +216,50 @@ private fun TweetActionBar(
                 Icon(
                     Icons.Outlined.Repeat,
                     contentDescription = "Reposts",
-                    modifier = Modifier.size(16.dp),
-                    tint = if (tweet.repostedByMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                    tint =
+                        if (tweet.repostedByMe) {
+                            MaterialTheme.colorScheme.secondary
+                        } else {
+                            actionTint
+                        },
                 )
             },
             count = tweet.repostCount,
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onLikeClick, modifier = Modifier.size(28.dp)) {
+            IconButton(onClick = onLikeClick, modifier = Modifier.size(30.dp)) {
                 Icon(
                     imageVector = if (tweet.likedByMe) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = if (tweet.likedByMe) "Unlike" else "Like",
-                    modifier = Modifier.size(16.dp),
-                    tint = if (tweet.likedByMe) Color(0xFFF91880) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                    tint =
+                        if (tweet.likedByMe) {
+                            MaterialTheme.colorScheme.tertiary
+                        } else {
+                            actionTint
+                        },
                 )
             }
-            CountText(tweet.likeCount)
+            CountText(
+                count = tweet.likeCount,
+                tint =
+                    if (tweet.likedByMe) {
+                        MaterialTheme.colorScheme.tertiary
+                    } else {
+                        actionTint
+                    },
+            )
         }
         ActionItem(
-            icon = { Icon(Icons.Outlined.BarChart, contentDescription = "Views", modifier = Modifier.size(16.dp)) },
+            icon = {
+                Icon(
+                    Icons.Outlined.BarChart,
+                    contentDescription = "Views",
+                    modifier = Modifier.size(18.dp),
+                    tint = actionTint,
+                )
+            },
             count = tweet.viewCount,
         )
     }
@@ -226,13 +277,16 @@ private fun ActionItem(
 }
 
 @Composable
-private fun CountText(count: Int) {
+private fun CountText(
+    count: Int,
+    tint: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurfaceVariant,
+) {
     if (count > 0) {
         Spacer(Modifier.width(4.dp))
         Text(
             text = count.toString(),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.labelMedium,
+            color = tint,
         )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -60,8 +62,18 @@ fun RegisterScreen(
         }
     }
 
+    val fieldShape = MaterialTheme.shapes.medium
+    val fieldColors =
+        OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+        )
+
     Scaffold(
         modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
@@ -69,14 +81,21 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Create account", style = MaterialTheme.typography.headlineMedium)
-            Spacer(Modifier.height(24.dp))
+            Text(
+                text = "Create account",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.height(28.dp))
             OutlinedTextField(
                 value = displayName,
                 onValueChange = { displayName = it },
                 label = { Text("Display name") },
                 singleLine = true,
                 enabled = !uiState.submitting,
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(12.dp))
@@ -86,6 +105,8 @@ fun RegisterScreen(
                 label = { Text("Username") },
                 singleLine = true,
                 enabled = !uiState.submitting,
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(12.dp))
@@ -97,13 +118,16 @@ fun RegisterScreen(
                 enabled = !uiState.submitting,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(24.dp))
             Button(
                 onClick = { viewModel.register(username, displayName, password) },
                 enabled = !uiState.submitting && username.isNotBlank() && displayName.isNotBlank() && password.isNotBlank(),
-                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.fillMaxWidth().height(52.dp),
             ) {
                 if (uiState.submitting) {
                     CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)

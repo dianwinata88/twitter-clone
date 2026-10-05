@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -68,8 +71,18 @@ fun LoginScreen(
         }
     }
 
+    val fieldShape = MaterialTheme.shapes.medium
+    val fieldColors =
+        OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+        )
+
     Scaffold(
         modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
@@ -79,9 +92,21 @@ fun LoginScreen(
         ) {
             val user = uiState.user
             if (user != null) {
-                Text(text = "Twitter Clone", style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = "Twitter Clone",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                )
                 Spacer(Modifier.height(24.dp))
-                Card(Modifier.fillMaxWidth()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.large,
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                        ),
+                ) {
                     Column(Modifier.padding(16.dp)) {
                         Text(text = "Signed in as @${user.username}", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(4.dp))
@@ -93,21 +118,38 @@ fun LoginScreen(
                     }
                 }
                 Spacer(Modifier.height(16.dp))
-                Button(onClick = onFeed, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = onFeed,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                ) {
                     Text("Continue to feed")
                 }
                 TextButton(onClick = { viewModel.logout() }) {
                     Text("Log out")
                 }
             } else {
-                Text(text = "Log in", style = MaterialTheme.typography.headlineMedium)
-                Spacer(Modifier.height(24.dp))
+                Text(
+                    text = "Twitter Clone",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = "Welcome back",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(28.dp))
                 OutlinedTextField(
                     value = username,
                     onValueChange = { username = it },
                     label = { Text("Username") },
                     singleLine = true,
                     enabled = !uiState.submitting,
+                    shape = fieldShape,
+                    colors = fieldColors,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(12.dp))
@@ -119,13 +161,16 @@ fun LoginScreen(
                     enabled = !uiState.submitting,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    shape = fieldShape,
+                    colors = fieldColors,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(24.dp))
                 Button(
                     onClick = { viewModel.login(username, password) },
                     enabled = !uiState.submitting && username.isNotBlank() && password.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth().height(52.dp),
                 ) {
                     if (uiState.submitting) {
                         CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)

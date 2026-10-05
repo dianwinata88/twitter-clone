@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -77,10 +78,15 @@ fun ComposeTweetScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                    ),
                 navigationIcon = {
                     IconButton(onClick = onClose) {
                         Icon(Icons.Filled.Close, contentDescription = "Close composer")
@@ -98,6 +104,7 @@ fun ComposeTweetScreen(
                     Button(
                         onClick = viewModel::post,
                         enabled = uiState.canPost,
+                        shape = MaterialTheme.shapes.medium,
                     ) {
                         Text("Post")
                     }
@@ -149,7 +156,7 @@ fun ComposeTweetScreen(
                     }
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Row(
                 modifier =
                     Modifier
@@ -192,7 +199,7 @@ private fun MediaPreview(
         modifier =
             modifier
                 .size(96.dp)
-                .clip(RoundedCornerShape(12.dp)),
+                .clip(RoundedCornerShape(16.dp)),
     ) {
         AsyncImage(
             model = uri,
