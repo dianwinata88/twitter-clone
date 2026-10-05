@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.twitterclone.core.model.Routes
 import com.twitterclone.core.model.User
+import com.twitterclone.core.ui.theme.XBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,9 +75,15 @@ fun FollowListScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Connections") },
+                title = {
+                    Text(
+                        "Connections",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -82,12 +92,22 @@ fun FollowListScreen(
                         )
                     }
                 },
+                colors =
+                    TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = XBlack,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
-            TabRow(selectedTabIndex = selectedIndex) {
+            TabRow(
+                selectedTabIndex = selectedIndex,
+                containerColor = XBlack,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
                         selected = index == selectedIndex,
@@ -164,7 +184,7 @@ private fun FollowListRow(
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
-                    .size(44.dp)
+                    .size(40.dp)
                     .clip(CircleShape),
         )
         Spacer(Modifier.width(12.dp))
@@ -187,9 +207,21 @@ private fun FollowListRow(
         if (showFollowButton) {
             Spacer(Modifier.width(8.dp))
             if (user.followedByMe) {
-                OutlinedButton(onClick = onFollowClick) { Text("Following") }
+                OutlinedButton(onClick = onFollowClick, shape = MaterialTheme.shapes.extraLarge) {
+                    Text("Following")
+                }
             } else {
-                Button(onClick = onFollowClick) { Text("Follow") }
+                Button(
+                    onClick = onFollowClick,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black,
+                        ),
+                ) {
+                    Text("Follow")
+                }
             }
         }
     }

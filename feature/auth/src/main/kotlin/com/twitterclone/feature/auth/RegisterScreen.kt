@@ -27,10 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.twitterclone.core.ui.theme.XBlack
 
 /** Registration form backed by [AuthRepository.register]. */
 @Composable
@@ -62,6 +65,7 @@ fun RegisterScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
@@ -69,7 +73,14 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Create account", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = "X",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 40.sp,
+            )
+            Spacer(Modifier.height(16.dp))
+            Text(text = "Create your account", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(24.dp))
             OutlinedTextField(
                 value = displayName,
@@ -77,6 +88,7 @@ fun RegisterScreen(
                 label = { Text("Display name") },
                 singleLine = true,
                 enabled = !uiState.submitting,
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(12.dp))
@@ -86,6 +98,7 @@ fun RegisterScreen(
                 label = { Text("Username") },
                 singleLine = true,
                 enabled = !uiState.submitting,
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(12.dp))
@@ -97,12 +110,14 @@ fun RegisterScreen(
                 enabled = !uiState.submitting,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(24.dp))
             Button(
                 onClick = { viewModel.register(username, displayName, password) },
                 enabled = !uiState.submitting && username.isNotBlank() && displayName.isNotBlank() && password.isNotBlank(),
+                shape = MaterialTheme.shapes.extraLarge,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 if (uiState.submitting) {

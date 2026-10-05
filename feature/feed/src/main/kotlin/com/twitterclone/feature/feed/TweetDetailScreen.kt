@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.twitterclone.core.ui.component.TweetCard
+import com.twitterclone.core.ui.theme.XBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +54,15 @@ fun TweetDetailScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Post") },
+                title = {
+                    Text(
+                        "Post",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -63,6 +71,12 @@ fun TweetDetailScreen(
                         )
                     }
                 },
+                colors =
+                    TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = XBlack,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },

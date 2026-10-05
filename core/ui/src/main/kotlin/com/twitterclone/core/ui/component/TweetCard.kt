@@ -37,6 +37,8 @@ import com.twitterclone.core.model.Media
 import com.twitterclone.core.model.MediaType
 import com.twitterclone.core.model.SyncState
 import com.twitterclone.core.model.Tweet
+import com.twitterclone.core.ui.theme.XGreen
+import com.twitterclone.core.ui.theme.XPink
 import com.twitterclone.core.ui.util.relativeTime
 
 /**
@@ -64,7 +66,7 @@ fun TweetCard(
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
-                    .size(44.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
                     .clickable { onProfileClick(tweet.author.id) },
         )
@@ -122,7 +124,7 @@ private fun MediaGrid(
     images: List<Media>,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(16.dp)
     when (images.size) {
         1 ->
             AsyncImage(
@@ -159,7 +161,7 @@ private fun MediaGrid(
                                     Modifier
                                         .weight(1f)
                                         .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(4.dp)),
+                                        .clip(RoundedCornerShape(8.dp)),
                             )
                         }
                         if (rowItems.size == 1) Spacer(Modifier.weight(1f))
@@ -182,7 +184,14 @@ private fun TweetActionBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ActionItem(
-            icon = { Icon(Icons.Outlined.ChatBubbleOutline, contentDescription = "Replies", modifier = Modifier.size(16.dp)) },
+            icon = {
+                Icon(
+                    Icons.Outlined.ChatBubbleOutline,
+                    contentDescription = "Replies",
+                    modifier = Modifier.size(18.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
             count = tweet.replyCount,
         )
         ActionItem(
@@ -190,25 +199,36 @@ private fun TweetActionBar(
                 Icon(
                     Icons.Outlined.Repeat,
                     contentDescription = "Reposts",
-                    modifier = Modifier.size(16.dp),
-                    tint = if (tweet.repostedByMe) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                    tint = if (tweet.repostedByMe) XGreen else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
             count = tweet.repostCount,
+            tint = if (tweet.repostedByMe) XGreen else MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onLikeClick, modifier = Modifier.size(28.dp)) {
                 Icon(
                     imageVector = if (tweet.likedByMe) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = if (tweet.likedByMe) "Unlike" else "Like",
-                    modifier = Modifier.size(16.dp),
-                    tint = if (tweet.likedByMe) Color(0xFFF91880) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                    tint = if (tweet.likedByMe) XPink else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            CountText(tweet.likeCount)
+            CountText(
+                count = tweet.likeCount,
+                tint = if (tweet.likedByMe) XPink else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
         ActionItem(
-            icon = { Icon(Icons.Outlined.BarChart, contentDescription = "Views", modifier = Modifier.size(16.dp)) },
+            icon = {
+                Icon(
+                    Icons.Outlined.BarChart,
+                    contentDescription = "Views",
+                    modifier = Modifier.size(18.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
             count = tweet.viewCount,
         )
     }
@@ -217,22 +237,26 @@ private fun TweetActionBar(
 @Composable
 private fun ActionItem(
     icon: @Composable () -> Unit,
-    count: Int
+    count: Int,
+    tint: Color = Color.Unspecified,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         icon()
-        CountText(count)
+        CountText(count = count, tint = tint)
     }
 }
 
 @Composable
-private fun CountText(count: Int) {
+private fun CountText(
+    count: Int,
+    tint: Color = Color.Unspecified,
+) {
     if (count > 0) {
         Spacer(Modifier.width(4.dp))
         Text(
             text = count.toString(),
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (tint == Color.Unspecified) MaterialTheme.colorScheme.onSurfaceVariant else tint,
         )
     }
 }

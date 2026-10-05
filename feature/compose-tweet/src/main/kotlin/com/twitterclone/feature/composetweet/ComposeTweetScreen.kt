@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,6 +49,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.twitterclone.core.ui.theme.XBlack
 
 /** Full-screen tweet composer, presented like X's. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +79,7 @@ fun ComposeTweetScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -98,10 +101,17 @@ fun ComposeTweetScreen(
                     Button(
                         onClick = viewModel::post,
                         enabled = uiState.canPost,
+                        shape = MaterialTheme.shapes.extraLarge,
                     ) {
-                        Text("Post")
+                        Text("Post", style = MaterialTheme.typography.labelLarge)
                     }
                 },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = XBlack,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                        actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
     ) { padding ->

@@ -1,6 +1,7 @@
 package com.twitterclone.feature.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,6 +55,7 @@ import coil3.compose.AsyncImage
 import com.twitterclone.core.model.Routes
 import com.twitterclone.core.model.User
 import com.twitterclone.core.ui.component.TweetCard
+import com.twitterclone.core.ui.theme.XBlack
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -80,9 +85,15 @@ fun ProfileScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(uiState.user?.displayName ?: "Profile") },
+                title = {
+                    Text(
+                        uiState.user?.displayName ?: "Profile",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -91,6 +102,12 @@ fun ProfileScreen(
                         )
                     }
                 },
+                colors =
+                    TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = XBlack,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -199,6 +216,7 @@ private fun ProfileHeader(
                         .padding(start = 16.dp)
                         .size(80.dp)
                         .clip(CircleShape)
+                        .border(4.dp, XBlack, CircleShape)
                         .background(MaterialTheme.colorScheme.surfaceVariant),
             )
         }
@@ -209,11 +227,25 @@ private fun ProfileHeader(
         ) {
             Spacer(Modifier.weight(1f))
             if (isSelf) {
-                OutlinedButton(onClick = onEditClick) { Text("Edit profile") }
+                OutlinedButton(onClick = onEditClick, shape = MaterialTheme.shapes.extraLarge) {
+                    Text("Edit profile")
+                }
             } else if (user.followedByMe) {
-                OutlinedButton(onClick = onFollowClick) { Text("Following") }
+                OutlinedButton(onClick = onFollowClick, shape = MaterialTheme.shapes.extraLarge) {
+                    Text("Following")
+                }
             } else {
-                Button(onClick = onFollowClick) { Text("Follow") }
+                Button(
+                    onClick = onFollowClick,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black,
+                        ),
+                ) {
+                    Text("Follow")
+                }
             }
         }
         Column(Modifier.padding(horizontal = 16.dp)) {

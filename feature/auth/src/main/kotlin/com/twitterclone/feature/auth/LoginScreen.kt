@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -28,10 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.twitterclone.core.ui.theme.XBlack
 
 private const val DEMO_USERNAME = "demo"
 private const val DEMO_PASSWORD = "demo"
@@ -70,6 +76,7 @@ fun LoginScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = XBlack,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
@@ -79,9 +86,15 @@ fun LoginScreen(
         ) {
             val user = uiState.user
             if (user != null) {
-                Text(text = "Twitter Clone", style = MaterialTheme.typography.headlineMedium)
+                XMark()
                 Spacer(Modifier.height(24.dp))
-                Card(Modifier.fillMaxWidth()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                ) {
                     Column(Modifier.padding(16.dp)) {
                         Text(text = "Signed in as @${user.username}", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(4.dp))
@@ -93,14 +106,23 @@ fun LoginScreen(
                     }
                 }
                 Spacer(Modifier.height(16.dp))
-                Button(onClick = onFeed, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = onFeed,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.extraLarge,
+                ) {
                     Text("Continue to feed")
                 }
                 TextButton(onClick = { viewModel.logout() }) {
                     Text("Log out")
                 }
             } else {
-                Text(text = "Log in", style = MaterialTheme.typography.headlineMedium)
+                XMark()
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    text = "Log in to Twitter Clone",
+                    style = MaterialTheme.typography.headlineSmall,
+                )
                 Spacer(Modifier.height(24.dp))
                 OutlinedTextField(
                     value = username,
@@ -108,6 +130,7 @@ fun LoginScreen(
                     label = { Text("Username") },
                     singleLine = true,
                     enabled = !uiState.submitting,
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(12.dp))
@@ -119,33 +142,55 @@ fun LoginScreen(
                     enabled = !uiState.submitting,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(24.dp))
                 Button(
                     onClick = { viewModel.login(username, password) },
                     enabled = !uiState.submitting && username.isNotBlank() && password.isNotBlank(),
+                    shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     if (uiState.submitting) {
                         CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                     } else {
-                        Text("Log in")
+                        Text("Log in", style = MaterialTheme.typography.labelLarge)
                     }
                 }
-                TextButton(
+                Spacer(Modifier.height(12.dp))
+                OutlinedButton(
                     onClick = {
                         username = DEMO_USERNAME
                         password = DEMO_PASSWORD
                     },
+                    shape = MaterialTheme.shapes.extraLarge,
+                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("Use demo account")
+                    Text("Use demo account", style = MaterialTheme.typography.labelLarge)
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(16.dp))
                 TextButton(onClick = onRegisterClick) {
                     Text("New here? Create an account")
                 }
             }
         }
     }
+}
+
+/** White X-style wordmark. */
+@Composable
+private fun XMark(modifier: Modifier = Modifier) {
+    Text(
+        text = "X",
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 40.sp,
+        modifier = modifier,
+    )
 }
