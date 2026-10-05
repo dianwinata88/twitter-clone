@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -79,30 +80,37 @@ fun ComposeTweetScreen(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(Icons.Filled.Close, contentDescription = "Close composer")
-                    }
-                },
-                actions = {
-                    if (uiState.posting) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                        Text(
-                            text = "Posting…",
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                        )
-                    }
-                    Button(
-                        onClick = viewModel::post,
-                        enabled = uiState.canPost,
-                    ) {
-                        Text("Post")
-                    }
-                },
-            )
+            Column {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onClose) {
+                            Icon(Icons.Filled.Close, contentDescription = "Close composer")
+                        }
+                    },
+                    actions = {
+                        if (uiState.posting) {
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                            Text(
+                                text = "Posting…",
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                        }
+                        Button(
+                            onClick = viewModel::post,
+                            enabled = uiState.canPost,
+                        ) {
+                            Text("Post")
+                        }
+                    },
+                    colors =
+                        TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ),
+                )
+                HorizontalDivider()
+            }
         },
     ) { padding ->
         Column(

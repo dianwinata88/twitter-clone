@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -74,7 +73,6 @@ fun TweetCard(
                 Text(
                     text = tweet.author.displayName,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.clickable { onProfileClick(tweet.author.id) },
@@ -202,7 +200,7 @@ private fun TweetActionBar(
                     imageVector = if (tweet.likedByMe) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = if (tweet.likedByMe) "Unlike" else "Like",
                     modifier = Modifier.size(16.dp),
-                    tint = if (tweet.likedByMe) Color(0xFFF91880) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = if (tweet.likedByMe) Color(0xFFE0245E) else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             CountText(tweet.likeCount)

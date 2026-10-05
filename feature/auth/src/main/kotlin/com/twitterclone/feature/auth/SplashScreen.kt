@@ -41,7 +41,11 @@ fun SplashScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = "Twitter Clone", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Twitter Clone",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
         Spacer(Modifier.height(24.dp))
         CircularProgressIndicator()
     }

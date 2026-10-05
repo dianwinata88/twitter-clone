@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Home
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -33,6 +35,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -82,58 +86,111 @@ fun FeedScreen(
         modifier = modifier,
         topBar = {
             Column {
-                CenterAlignedTopAppBar(title = { Text("Twitter Clone") })
-                PrimaryTabRow(selectedTabIndex = 0) {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = "Twitter Clone",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    },
+                    colors =
+                        TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ),
+                )
+                PrimaryTabRow(
+                    selectedTabIndex = 0,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
                     Tab(
                         selected = true,
                         onClick = {},
-                        text = { Text("Following") },
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = {
+                            Text(
+                                text = "Following".uppercase(),
+                                style = MaterialTheme.typography.labelLarge,
+                                letterSpacing = 0.8.sp,
+                            )
+                        },
                     )
                     Tab(
                         selected = false,
                         onClick = {},
                         enabled = false,
-                        text = { Text("For you") },
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = {
+                            Text(
+                                text = "For you".uppercase(),
+                                style = MaterialTheme.typography.labelLarge,
+                                letterSpacing = 0.8.sp,
+                            )
+                        },
                     )
                 }
+                HorizontalDivider()
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onComposeClick) {
+            FloatingActionButton(
+                onClick = onComposeClick,
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ) {
                 Icon(Icons.Filled.Edit, contentDescription = "Compose tweet")
             }
         },
         bottomBar = {
-            NavigationBar {
+            val navItemColors =
+                NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 0.dp,
+            ) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { scope.launch { listState.animateScrollToItem(0) } },
                     icon = { Icon(Icons.Outlined.Home, contentDescription = "Home") },
                     label = { Text("Home") },
+                    colors = navItemColors,
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { comingSoon("Search") },
                     icon = { Icon(Icons.Outlined.Search, contentDescription = "Search") },
                     label = { Text("Search") },
+                    colors = navItemColors,
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { comingSoon("Notifications") },
                     icon = { Icon(Icons.Outlined.Notifications, contentDescription = "Notifications") },
                     label = { Text("Alerts") },
+                    colors = navItemColors,
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { comingSoon("Messages") },
                     icon = { Icon(Icons.Outlined.MailOutline, contentDescription = "Messages") },
                     label = { Text("Messages") },
+                    colors = navItemColors,
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = onMyProfileClick,
                     icon = { Icon(Icons.Outlined.Person, contentDescription = "Profile") },
                     label = { Text("Profile") },
+                    colors = navItemColors,
                 )
             }
         },
