@@ -9,10 +9,7 @@ import com.twitterclone.core.model.Routes
 import com.twitterclone.feature.feed.FeedScreen
 import com.twitterclone.feature.feed.TweetDetailScreen
 
-/**
- * Feed feature's destinations. Called once from the app-level NavHost;
- * feature agents replace the screen bodies, not this wiring contract.
- */
+/** Feed feature's destinations, registered once by the app-level NavHost. */
 fun NavGraphBuilder.feedGraph(navController: NavController) {
     composable(Routes.FEED) {
         FeedScreen(
@@ -24,9 +21,10 @@ fun NavGraphBuilder.feedGraph(navController: NavController) {
     composable(
         route = Routes.TWEET_DETAIL,
         arguments = listOf(navArgument(Routes.ARG_TWEET_ID) { type = NavType.StringType }),
-    ) { entry ->
+    ) {
         TweetDetailScreen(
-            tweetId = entry.arguments?.getString(Routes.ARG_TWEET_ID).orEmpty(),
+            onBackClick = { navController.popBackStack() },
+            onProfileClick = { userId -> navController.navigate(Routes.profile(userId)) },
         )
     }
 }
