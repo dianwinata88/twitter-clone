@@ -9,6 +9,8 @@ import com.twitterclone.feature.composetweet.ComposeTweetScreen
 /** Compose-tweet feature's destinations. */
 fun NavGraphBuilder.composeTweetGraph(navController: NavController) {
     composable(Routes.COMPOSE_TWEET) {
-        ComposeTweetScreen()
+        ComposeTweetScreen(
+            onClose = { navController.popBackStack() },
+        )
     }
 }
