@@ -24,7 +24,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.FEED,
+        startDestination = Routes.AUTH_SPLASH,
         modifier = modifier,
     ) {
         authGraph(navController)
