@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feed_empty_title">Welcome to your timeline</string>
+    <string name="feed_empty_body">Posts from people you follow will show up here.</string>
+    <string name="feed_load_error">Something went wrong. Try again.</string>
+    <string name="feed_retry">Retry</string>
+    <string name="feed_like_error">Couldn’t update like. Try again.</string>
+    <string name="tweet_detail_title">Post</string>
+    <string name="tweet_detail_back">Back</string>
+    <string name="tweet_detail_not_found">This post doesn’t exist anymore.</string>
+    <string name="tweet_detail_replies">Replies</string>
+    <string name="tweet_detail_reposts">Reposts</string>
+    <string name="tweet_detail_like">Like</string>
+    <string name="tweet_detail_unlike">Unlike</string>
+    <string name="tweet_detail_share">Share</string>
+    <string name="tweet_detail_bookmark">Bookmark</string>
+    <string name="tweet_detail_stat_replies">replies</string>
+    <string name="tweet_detail_stat_reposts">reposts</string>
+    <string name="tweet_detail_stat_likes">likes</string>
+    <string name="tweet_detail_stat_views">views</string>
+</resources>

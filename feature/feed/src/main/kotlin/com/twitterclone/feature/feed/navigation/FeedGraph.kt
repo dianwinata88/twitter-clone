@@ -6,24 +6,27 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.twitterclone.core.model.Routes
-import com.twitterclone.core.ui.component.PlaceholderScreen
+import com.twitterclone.feature.feed.FeedScreen
+import com.twitterclone.feature.feed.TweetDetailScreen
 
 /**
- * Feed feature's destinations. V1 stub: the feed agent replaces these
- * placeholders with the real home timeline (paged, pull-to-refresh) and tweet
- * detail. Called once from the app-level NavHost.
+ * Feed feature's destinations: the paged home timeline and tweet detail.
+ * Called once from the app-level NavHost.
  */
 fun NavGraphBuilder.feedGraph(navController: NavController) {
     composable(Routes.FEED) {
-        PlaceholderScreen(name = "Feed", hint = "Home timeline — paged, pull-to-refresh.")
+        FeedScreen(
+            onTweetClick = { tweetId -> navController.navigate(Routes.tweetDetail(tweetId)) },
+            onProfileClick = { userId -> navController.navigate(Routes.profile(userId)) },
+        )
     }
     composable(
         route = Routes.TWEET_DETAIL,
         arguments = listOf(navArgument(Routes.ARG_TWEET_ID) { type = NavType.StringType }),
-    ) { entry ->
-        PlaceholderScreen(
-            name = "Tweet detail",
-            hint = "tweetId = ${entry.arguments?.getString(Routes.ARG_TWEET_ID).orEmpty()}",
+    ) {
+        TweetDetailScreen(
+            onBack = navController::popBackStack,
+            onProfileClick = { userId -> navController.navigate(Routes.profile(userId)) },
         )
     }
 }
