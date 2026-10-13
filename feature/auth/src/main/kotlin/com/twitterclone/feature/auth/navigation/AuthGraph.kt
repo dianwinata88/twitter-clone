@@ -4,21 +4,48 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.twitterclone.core.model.Routes
-import com.twitterclone.core.ui.component.PlaceholderScreen
+import com.twitterclone.feature.auth.LoginScreen
+import com.twitterclone.feature.auth.RegisterScreen
+import com.twitterclone.feature.auth.SplashScreen
 
 /**
- * Auth feature's destinations. V1 stub: the auth feature agent replaces these
- * placeholders with the real splash → login → register flow and may retarget
- * the NavHost startDestination to [Routes.SPLASH]; see docs/ARCHITECTURE.md.
+ * Auth feature's destinations: splash gate → login → register. Splash is the
+ * NavHost start destination (see AppNavHost); successful auth navigates to the
+ * feed with the whole auth back stack cleared so Back exits the app like X.
  */
 fun NavGraphBuilder.authGraph(navController: NavController) {
     composable(Routes.SPLASH) {
-        PlaceholderScreen(name = "Splash", hint = "Auth gate — decides logged-in vs. logged-out.")
+        SplashScreen(
+            onLoggedIn = {
+                navController.navigate(Routes.FEED) {
+                    popUpTo(Routes.SPLASH) { inclusive = true }
+                }
+            },
+            onLoggedOut = {
+                navController.navigate(Routes.AUTH_LOGIN) {
+                    popUpTo(Routes.SPLASH) { inclusive = true }
+                }
+            },
+        )
     }
     composable(Routes.AUTH_LOGIN) {
-        PlaceholderScreen(name = "Log in", hint = "demo / demo works against the fake backend.")
+        LoginScreen(
+            onNavigateToRegister = { navController.navigate(Routes.AUTH_REGISTER) },
+            onLoggedIn = {
+                navController.navigate(Routes.FEED) {
+                    popUpTo(Routes.AUTH_LOGIN) { inclusive = true }
+                }
+            },
+        )
     }
     composable(Routes.AUTH_REGISTER) {
-        PlaceholderScreen(name = "Create account", hint = "AuthRepository.register persists to Room.")
+        RegisterScreen(
+            onNavigateToLogin = { navController.popBackStack() },
+            onRegistered = {
+                navController.navigate(Routes.FEED) {
+                    popUpTo(Routes.AUTH_LOGIN) { inclusive = true }
+                }
+            },
+        )
     }
 }
