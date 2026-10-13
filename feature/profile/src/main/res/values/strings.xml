@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_back">Back</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_log_out">Log out</string>
+    <string name="profile_posts_tab">Posts</string>
+    <string name="profile_joined">Joined %1$s %2$d</string>
+    <string name="profile_following_label">Following</string>
+    <string name="profile_followers_label">Followers</string>
+    <string name="profile_load_failed">Couldn’t load this profile</string>
+    <string name="profile_signed_out">You’re not signed in</string>
+    <string name="profile_log_in">Log in</string>
+    <string name="profile_retry">Retry</string>
+    <string name="profile_action_failed">Something went wrong</string>
+
+    <plurals name="profile_posts_count">
+        <item quantity="one">%1$d post</item>
+        <item quantity="other">%1$d posts</item>
+    </plurals>
+
+    <string name="follow_button_follow">Follow</string>
+    <string name="follow_button_following">Following</string>
+
+    <string name="follow_list_followers_title">Followers</string>
+    <string name="follow_list_following_title">Following</string>
+    <string name="follow_list_empty">Nobody here yet</string>
+
+    <string name="edit_profile_title">Edit profile</string>
+    <string name="edit_profile_name">Name</string>
+    <string name="edit_profile_bio">Bio</string>
+    <string name="edit_profile_save">Save</string>
+    <string name="edit_profile_cancel">Cancel</string>
+</resources>
