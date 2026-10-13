@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -137,7 +136,10 @@ private fun BottomNav(
                 selected = currentRoute == tab.route,
                 onClick = {
                     navController.navigate(tab.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
+                        // The graph start destination is the splash gate, but
+                        // the bottom nav's home base is the feed — keep it
+                        // under every tab so Back returns home.
+                        popUpTo(Routes.FEED) {
                             saveState = true
                         }
                         launchSingleTop = true

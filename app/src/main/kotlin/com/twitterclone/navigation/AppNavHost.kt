@@ -30,7 +30,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.FEED,
+        startDestination = Routes.SPLASH,
         modifier = modifier,
     ) {
         authGraph(navController)
