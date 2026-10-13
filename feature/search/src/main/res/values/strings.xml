@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_placeholder">Search</string>
+    <string name="search_clear">Clear search</string>
+    <string name="search_trending_title">Trending</string>
+    <string name="search_trending_empty">No trends right now</string>
+    <string name="search_trending_error">Couldn\'t load trends</string>
+    <string name="search_tab_posts">Posts</string>
+    <string name="search_tab_people">People</string>
+    <string name="search_posts_empty">No posts for \"%1$s\"</string>
+    <string name="search_people_empty">No people for \"%1$s\"</string>
+    <string name="search_results_error">Something went wrong</string>
+    <string name="search_follow">Follow</string>
+    <string name="search_following">Following</string>
+    <string name="search_user_avatar">%1$s avatar</string>
+</resources>

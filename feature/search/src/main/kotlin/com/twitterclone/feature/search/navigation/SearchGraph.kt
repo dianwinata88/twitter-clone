@@ -4,14 +4,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.twitterclone.core.model.Routes
-import com.twitterclone.core.ui.component.PlaceholderScreen
+import com.twitterclone.feature.search.SearchScreen
 
 /**
- * Search feature's destinations. V1 stub: the search agent replaces this with
- * the search bar + Posts/People tabs and the trending section.
+ * Search feature's destinations. A single [Routes.SEARCH] screen reached from
+ * the bottom nav; it navigates out to tweet detail and profiles via route
+ * helpers on [Routes].
  */
 fun NavGraphBuilder.searchGraph(navController: NavController) {
     composable(Routes.SEARCH) {
-        PlaceholderScreen(name = "Search", hint = "Search bar + Posts/People tabs + trending.")
+        SearchScreen(
+            onTweetClick = { tweetId -> navController.navigate(Routes.tweetDetail(tweetId)) },
+            onProfileClick = { userId -> navController.navigate(Routes.profile(userId)) },
+        )
     }
 }
