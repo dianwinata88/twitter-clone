@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="composetweet_close">Close composer</string>
+    <string name="composetweet_post">Post</string>
+    <string name="composetweet_placeholder">What\'s happening?</string>
+    <string name="composetweet_avatar">Your avatar</string>
+    <string name="composetweet_add_media">Add photos</string>
+    <string name="composetweet_attached_media">Attached photo</string>
+    <string name="composetweet_remove_media">Remove photo</string>
+    <string name="composetweet_send_failed">Couldn\'t send post. It will stay in your drafts as failed.</string>
+</resources>
